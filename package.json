@@ -1,0 +1,33 @@
+{
+  "name": "wildflower-twitch",
+  "version": "1.0.0",
+  "description": "Twitch plays Wildflower",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "webpack",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dweng0/Wildflower-twitch.git"
+  },
+  "author": "Jay Martin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dweng0/Wildflower-twitch/issues"
+  },
+  "homepage": "https://github.com/dweng0/Wildflower-twitch#readme",
+  "dependencies": {
+    "babylonjs": "^4.1.0",
+    "ramda": "^0.27.1"
+  },
+  "devDependencies": {
+    "html-webpack-plugin": "^4.3.0",
+    "jest": "^26.4.0",
+    "ts-loader": "^8.0.2",
+    "tsc": "^1.20150623.0",
+    "typescript": "^3.9.7",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  }
+}
