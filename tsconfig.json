@@ -7,10 +7,6 @@
     "removeComments": true,
     "strict": true,
     "sourceMap":true,
-    "types": [
-            "babylonjs",
-            "babylonjs-gui",
-            "babylonjs-materials"
-        ],
+    "moduleResolution": "Node"
   }
 }
