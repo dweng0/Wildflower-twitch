@@ -22,6 +22,8 @@
     "ramda": "^0.27.1"
   },
   "devDependencies": {
+    "@types/babylon": "^6.16.5",
+    "@types/ramda": "^0.27.14",
     "html-webpack-plugin": "^4.3.0",
     "jest": "^26.4.0",
     "ts-loader": "^8.0.2",
