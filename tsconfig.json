@@ -6,6 +6,11 @@
     "target": "es5",
     "removeComments": true,
     "strict": true,
-    "sourceMap":true
+    "sourceMap":true,
+    "types": [
+            "babylonjs",
+            "babylonjs-gui",
+            "babylonjs-materials"
+        ],
   }
 }
