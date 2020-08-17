@@ -7,6 +7,9 @@
     "removeComments": true,
     "strict": true,
     "sourceMap":true,
-    "moduleResolution": "Node"
+    "moduleResolution": "Node",
+    "types": [
+      "babylonjs"
+  ]
   }
 }

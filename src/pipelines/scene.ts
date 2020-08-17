@@ -1,14 +1,21 @@
-
+import * as BABYLON from 'babylonjs';
 import { pipe, isNil } from 'ramda';
 import { GameCube } from '../interface/pipeline';
-import { initializeDOM } from './dominit';
+import { Nullable } from 'babylonjs';
 
+const sceneEnrichment = (cube: GameCube) => { 
+  console.debug('Scene enrichment begin');
+  return cube;
+}
 /**
  * Add engine to the cube
  * @param cube object
  */
 const getEngine = (cube: GameCube): GameCube => {
-  cube.engine = new BABYLON.Engine(cube.canvas, true);
+  if (isNil(cube.canvas)) {
+    throw new Error('Canvas has not been set!');
+  }
+  cube.engine = new BABYLON.Engine(cube.canvas as Nullable<HTMLCanvasElement>);
   return cube;
 };
 
@@ -24,6 +31,14 @@ const createScene = (cube: GameCube): GameCube => {
   return cube;
 };
 
+const attachCamera = (cube: GameCube): GameCube => { 
+  if (isNil(cube.scene)) {
+    throw new Error('No Scene was defined');
+  }
+  cube.camera = new BABYLON.ArcRotateCamera('camera', Math.PI / 2, Math.PI / 2, 2, new BABYLON.Vector3(0, 0, 5), cube.scene);
+  return cube
+}
+
 /**
  * Handle the lighting process
  * @param cube 
@@ -37,9 +52,10 @@ const createLighting = (cube: GameCube): GameCube => {
   return cube;
 }
 
-export const initializeScene = () => pipe(
-  initializeDOM,
+export const initializeScene = pipe(
+  sceneEnrichment,
   getEngine,
   createScene,
-  createLighting
+  attachCamera,
+  createLighting,
 );
