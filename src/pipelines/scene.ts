@@ -1,4 +1,4 @@
-import * as BABYLON from 'babylonjs';
+
 import { pipe, isNil } from 'ramda';
 import { GameCube } from '../interface/pipeline';
 import { initializeDOM } from './dominit';
