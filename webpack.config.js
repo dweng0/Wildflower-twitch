@@ -37,7 +37,8 @@ module.exports = {
           test: /[\\/]src[\\/]/,
           name: 'game',
           chunks: 'all',
-          maxSize: 1024
+          maxSize: 1024,
+          minChunks: 2,
         }
       }
     }

@@ -1,3 +1,5 @@
+import * as BABYLON from 'babylonjs';
+
 export enum Level {
     info,
     error,
@@ -10,6 +12,7 @@ export interface Log {
 }
 export interface GameCube {
     canvas: HTMLCanvasElement,
-    scene: BABYLON.Scene,
-    logs:Array<Log>
+    scene?: BABYLON.Scene,
+    engine?: BABYLON.Engine,
+    logs?:Array<Log>
 };
