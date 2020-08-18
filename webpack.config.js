@@ -1,5 +1,5 @@
 const path = require('path');
-
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
@@ -33,13 +33,18 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       title: "Wildflower"
-    })
+    }),
+    new webpack.ProvidePlugin({
+     CANNON: 'cannon',
+    }),
   ],
   optimization: {
+    minimize: true,
+     
     splitChunks: {
       cacheGroups: {
         commons: {
-          test: /[\\/]node_modules[\\/](babylonjs)[\\/]/,
+          test: /[\\/]node_modules[\\/]/,
           name: 'vendors',
           chunks: 'all',
           reuseExistingChunk: true
@@ -48,7 +53,7 @@ module.exports = {
           test: /[\\/]src[\\/]/,
           name: 'game',
           chunks: 'all',
-          maxSize: 1024,
+          maxSize: 102400,
           minChunks: 2,
         }
       }
