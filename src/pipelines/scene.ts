@@ -3,6 +3,12 @@ import { pipe, isNil } from 'ramda';
 import { GameCube } from '../interface/pipeline';
 import { Nullable } from 'babylonjs';
 
+/**
+ * Configs
+ */
+import followCameraConfig from '../assets/camera/follow.json';
+import gravity from '../assets/world/gravity.json';
+
 const sceneEnrichment = (cube: GameCube) => { 
   console.debug('Scene enrichment begin');
   return cube;
@@ -35,9 +41,37 @@ const attachCamera = (cube: GameCube): GameCube => {
   if (isNil(cube.scene)) {
     throw new Error('No Scene was defined');
   }
-  cube.camera = new BABYLON.ArcRotateCamera('camera', Math.PI / 2, Math.PI / 2, 2, new BABYLON.Vector3(0, 0, 5), cube.scene);
+  
+  cube.camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), cube.scene) as BABYLON.FreeCamera;
+  cube.camera.setTarget(BABYLON.Vector3.Zero());
+  cube.camera.attachControl(cube.canvas as HTMLCanvasElement, true);;
+  return cube;
+  // cube.camera = new BABYLON.FollowCamera('camera', new BABYLON.Vector3(0, 0, 5), cube.scene) as BABYLON.FollowCamera;
+
+  // console.log(`using config`, config);
+  // cube.camera.radius = config.radius;
+  // cube.camera.heightOffset = config.heightOffset;
+  // cube.camera.rotationOffset = config.rotationOffset;
+  // cube.camera.cameraAcceleration = config.cameraAcceleration;
+  // cube.camera.maxCameraSpeed = config.maxCameraSpeed;
+    
   return cube
 }
+
+//add physics
+const addPhysics = (cube: GameCube): GameCube => {
+  const gravityVector = new BABYLON.Vector3(gravity.x, gravity.y, gravity.z);
+  const physics = new BABYLON.CannonJSPlugin();
+  cube.scene?.enablePhysics(gravityVector, physics);
+
+  // Create ground collider
+  var ground = BABYLON.Mesh.CreateGround("ground1", 6, 6, 2, cube.scene);
+  ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.5, restitution: 0.7 }, cube.scene);
+
+  return cube;
+};
+
+
 
 /**
  * Handle the lighting process

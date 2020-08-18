@@ -8,8 +8,10 @@
     "strict": true,
     "sourceMap":true,
     "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
     "types": [
-      "babylonjs"
-  ]
+        "babylonjs"
+    ]
   }
 }

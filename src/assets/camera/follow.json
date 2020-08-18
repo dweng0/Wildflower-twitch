@@ -1,0 +1,7 @@
+{
+  "radius": 70,
+  "heightOffset": 70,
+  "rotationOffset": 720,
+  "cameraAcceleration": 0.7,
+  "maxCameraSpeed": 1
+}

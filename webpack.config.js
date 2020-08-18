@@ -5,11 +5,13 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   mode: 'development',
-  entry: './src/index.ts',
   devtool: 'inline-source-map',
   devServer: {
     contentBase: './dist',
     hot: true,
+  },
+  entry: {
+    index: './src/index.ts'
   },
   module: {
     rules: [
@@ -21,7 +23,7 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.ts', '.js'],
+    extensions: ['.ts', '.tsx', '.js'],
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -55,5 +57,8 @@ module.exports = {
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
+  },
+  externals: {
+    CANNON: 'cannon'
   }
 };

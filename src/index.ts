@@ -2,16 +2,20 @@ import { initializeDOM } from './pipelines/dominjection';
 import { initializeScene } from './pipelines/scene';
 import { GameCube } from './interface/pipeline';
 import { createCharacter } from './pipelines/characterbuilder';
+import { loadMap } from './pipelines/maploader';
 
 const run = () => { 
 
   //initialize babylon, we have not set up controls yet
   const cube: GameCube = initializeScene(initializeDOM()) as GameCube;
 
-  //some network stuff to get characters and manifests
+  //load mpp
+  loadMap(cube);
+  
 
   //load based on this
   createCharacter(cube);
+
 
   //start the render loop
   const { engine, scene } = cube;

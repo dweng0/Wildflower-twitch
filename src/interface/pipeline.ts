@@ -1,5 +1,5 @@
 import * as BABYLON from 'babylonjs';
-import { ArcRotateCamera } from 'babylonjs';
+import { ArcRotateCamera, FollowCamera, FreeCamera} from 'babylonjs';
 /** Alias type for value that can be null */
 export type Nullable<T> = T | null;
 
@@ -22,7 +22,7 @@ export interface GameCube {
     canvas?: HTMLCanvasElement | Nullable<HTMLCanvasElement> | Node
     scene?: BABYLON.Scene,
     engine?: BABYLON.Engine,
-    camera?: BABYLON.Camera | ArcRotateCamera,
+    camera?: FreeCamera,
     logs?: Array<Log>,
     characters?: Array<Character>
 };
