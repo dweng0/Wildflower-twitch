@@ -25,8 +25,17 @@ export interface MapManifest {
       baseUrl: string;
       texture: string;
       heightMap: string;
+      width: number;
+      height: number;
       skyBox: string;
-      physics?: string; // The phsycs object contains options needed for the physics imposter
+      subDivisions: number;
+      physics?: physics; // The phsycs object contains options needed for the physics imposter
+}
+
+export interface physics {
+      mass: number,
+      restitution: number,
+      friction: number
 }
 
 /**

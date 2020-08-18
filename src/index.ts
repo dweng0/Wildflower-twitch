@@ -1,21 +1,29 @@
-import { initializeDOM } from './pipelines/dominjection';
-import { initializeScene } from './pipelines/scene';
+import { initializeDOM } from './generators/document';
+import { initializeScene } from './generators/scene';
 import { GameCube } from './interface/pipeline';
-import { createCharacter } from './pipelines/characterbuilder';
-import { loadMap } from './pipelines/maploader';
+import { loadCharacter } from './generators/character';
+import { loadMap } from './generators/maploader';
+import { loadAssets } from './generators/assetloader';
 
 const run = () => { 
 
-  //initialize babylon, we have not set up controls yet
-  const cube: GameCube = initializeScene(initializeDOM()) as GameCube;
+  //create the canvas, inject it into document
+  let cube: GameCube = initializeDOM();
 
-  //load mpp
+  //create scene
+  cube = initializeScene(cube);
+
+  //load up assets
+  cube = loadAssets(cube);
+
+  //get assets
+
+  //load assets
   loadMap(cube);
   
 
   //load based on this
-  createCharacter(cube);
-
+  loadCharacter(cube);
 
   //start the render loop
   const { engine, scene } = cube;

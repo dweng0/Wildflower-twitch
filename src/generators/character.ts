@@ -2,7 +2,7 @@ import { GameCube } from '../interface/pipeline';
 import { isNil } from 'ramda';
 import * as BABYLON from 'babylonjs';
 
-export const createCharacter = (cube: GameCube) => {
+export const loadCharacter = (cube: GameCube) => {
   if (isNil(cube.scene)) {
     throw new Error('Unable to create character, scene missing!');
   }

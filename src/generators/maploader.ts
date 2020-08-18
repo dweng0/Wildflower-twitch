@@ -22,7 +22,7 @@ const addPhysics = (cube: GameCube): GameCube => {
   cube.scene?.enablePhysics(gravityVector, physics);
 
   // Create ground collider
-  var ground = BABYLON.Mesh.CreateGround("ground1", 6, 600, 2, cube.scene);
+  var ground = BABYLON.Mesh.CreateGround("ground1", 600, 600, 2, cube.scene);
   ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.5, restitution: 0.7 }, cube.scene);
 
   return cube;

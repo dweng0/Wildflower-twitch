@@ -8,6 +8,7 @@ import { Nullable } from 'babylonjs';
  */
 import followCameraConfig from '../assets/camera/follow.json';
 import gravity from '../assets/world/gravity.json';
+import { loadAssets } from './assetloader';
 
 const sceneEnrichment = (cube: GameCube) => { 
   console.debug('Scene enrichment begin');
@@ -37,6 +38,10 @@ const createScene = (cube: GameCube): GameCube => {
   return cube;
 };
 
+/**
+ * At some point we need to change the camera type here.
+ * @param cube 
+ */
 const attachCamera = (cube: GameCube): GameCube => { 
   if (isNil(cube.scene)) {
     throw new Error('No Scene was defined');
@@ -44,17 +49,7 @@ const attachCamera = (cube: GameCube): GameCube => {
   
   cube.camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), cube.scene) as BABYLON.FreeCamera;
   cube.camera.setTarget(BABYLON.Vector3.Zero());
-  cube.camera.attachControl(cube.canvas as HTMLCanvasElement, true);;
-  return cube;
-  // cube.camera = new BABYLON.FollowCamera('camera', new BABYLON.Vector3(0, 0, 5), cube.scene) as BABYLON.FollowCamera;
-
-  // console.log(`using config`, config);
-  // cube.camera.radius = config.radius;
-  // cube.camera.heightOffset = config.heightOffset;
-  // cube.camera.rotationOffset = config.rotationOffset;
-  // cube.camera.cameraAcceleration = config.cameraAcceleration;
-  // cube.camera.maxCameraSpeed = config.maxCameraSpeed;
-    
+  cube.camera.attachControl(cube.canvas as HTMLCanvasElement, true);
   return cube
 }
 
@@ -91,5 +86,5 @@ export const initializeScene = pipe(
   getEngine,
   createScene,
   attachCamera,
-  createLighting,
+  createLighting
 );
