@@ -36,6 +36,7 @@ module.exports = {
     }),
     new webpack.ProvidePlugin({
      CANNON: 'cannon',
+     Peer: 'peerjs'
     }),
   ],
   optimization: {

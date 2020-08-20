@@ -1,0 +1,5 @@
+{
+  "skybox":"/skybox",
+  "heightMap": "./heightMap.png",
+  "texture": "ground.jpg"
+}

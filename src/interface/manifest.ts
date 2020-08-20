@@ -23,11 +23,8 @@ export interface CharacterManifest {
  */
 export interface MapManifest {
       baseUrl: string;
-      texture: string;
-      heightMap: string;
       width: number;
       height: number;
-      skyBox: string;
       subDivisions: number;
       physics?: physics; // The phsycs object contains options needed for the physics imposter
 }

@@ -10,10 +10,15 @@ import followCameraConfig from '../assets/camera/follow.json';
 import gravity from '../assets/world/gravity.json';
 import { loadAssets } from './assetloader';
 
+/**
+ * Handles creation of dom elements and sets up events that are required by them
+ * @param cube 
+ */
 const sceneEnrichment = (cube: GameCube) => { 
   console.debug('Scene enrichment begin');
   return cube;
 }
+
 /**
  * Add engine to the cube
  * @param cube object
@@ -52,21 +57,6 @@ const attachCamera = (cube: GameCube): GameCube => {
   cube.camera.attachControl(cube.canvas as HTMLCanvasElement, true);
   return cube
 }
-
-//add physics
-const addPhysics = (cube: GameCube): GameCube => {
-  const gravityVector = new BABYLON.Vector3(gravity.x, gravity.y, gravity.z);
-  const physics = new BABYLON.CannonJSPlugin();
-  cube.scene?.enablePhysics(gravityVector, physics);
-
-  // Create ground collider
-  var ground = BABYLON.Mesh.CreateGround("ground1", 6, 6, 2, cube.scene);
-  ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.5, restitution: 0.7 }, cube.scene);
-
-  return cube;
-};
-
-
 
 /**
  * Handle the lighting process

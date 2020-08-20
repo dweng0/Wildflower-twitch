@@ -1,6 +1,7 @@
 import * as BABYLON from 'babylonjs';
 import { ArcRotateCamera, FollowCamera, FreeCamera} from 'babylonjs';
 import { MapManifest } from './manifest';
+import Peer from 'peerjs';
 /** Alias type for value that can be null */
 export type Nullable<T> = T | null;
 
@@ -30,11 +31,28 @@ export interface Character {
 
 export interface Asset { 
     name: string,
-    src: string
-    assetType: AssetType
+    source: string
 };
 
+export enum Matchmaker {
+    host,
+    join
+}
+
 export interface GameCube {
+    gameId?: string,
+    peers?: Array<string>
+    peer?: Peer,
+    peerId?: string,
+    connection?: any
+    connectionEvents?: {
+        begin: () => void
+        error?: (err: any) => void
+        /** all data will pass through this */
+        data?: (err: any) => void
+        close?: (err: any) => void
+    }
+    matchmaking?: Matchmaker
     ready?: boolean,
     canvas?: HTMLCanvasElement | Nullable<HTMLCanvasElement> | Node
     scene?: BABYLON.Scene,
@@ -42,10 +60,11 @@ export interface GameCube {
     camera?: FreeCamera,
     logs?: Array<Log>,
     console: Array<string>,
-    assets?: Array<Asset>
-    loadedAssets: any,
+    mapRoot?: string
+    loadedAssets?: any,
     characters?: Array<Character>,
     materials?: {
         map: MapManifest
     }
+
 };

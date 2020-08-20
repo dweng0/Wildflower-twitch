@@ -3,9 +3,11 @@
  */
 
 import * as BABYLON from 'babylonjs';
-import { GameCube, Asset, Level } from '../interface/pipeline';
+import { GameCube, Asset } from '../interface/pipeline';
 import { isEmpty, isNil } from 'ramda';
+import { loadAssets } from './assetloader';
 
+const rootAssetFolder = './assets/';
 /**
  * What happens when a task is succesffull?
  */
@@ -45,7 +47,7 @@ const onTaskFailure = (task: any, message: string, exception: string) => {
  * @param cube 
  */
 const loadAsset = (asset: Asset, assetsManager: BABYLON.AssetsManager, cube: GameCube) => {
-  const fileExtension = asset.src.split('.').pop()?.toLowerCase();
+  const fileExtension = asset.source.split('.').pop()?.toLowerCase();
   let assetTask;
   //load em
   switch (fileExtension) {
@@ -53,26 +55,26 @@ const loadAsset = (asset: Asset, assetsManager: BABYLON.AssetsManager, cube: Gam
     case "jpg":
     case "jpeg":
     case "gif":
-      assetTask = assetsManager.addTextureTask(asset.name, './images/' + asset.src);
+      assetTask = assetsManager.addTextureTask(asset.name, asset.source);
       break;
     case "dds":
-      assetTask = assetsManager.addCubeTextureTask(asset.name, './images/' + asset.src);
+      assetTask = assetsManager.addCubeTextureTask(asset.name, asset.source);
       break;
     case "hdr":
-      assetTask = assetsManager.addHDRCubeTextureTask(asset.name, './images/' + asset.src, 512);
+      assetTask = assetsManager.addHDRCubeTextureTask(asset.name, asset.source, 512);
       break;
     case "mp3":
     case "wav":
-      assetTask = assetsManager.addBinaryFileTask(asset.name, './sounds/' + asset.src);
+      assetTask = assetsManager.addBinaryFileTask(asset.name, asset.source);
       break;
     case "babylon":
     case "gltf":
     case "obj":
-      assetTask = assetsManager.addMeshTask(asset.name, "", "", './models/' + asset.src)
+      assetTask = assetsManager.addMeshTask(asset.name, "", "", asset.source)
       break;
     case "json":
     case "txt":
-      assetTask = assetsManager.addTextFileTask(asset.name, './data/' + asset.src);
+      assetTask = assetsManager.addTextFileTask(asset.name, asset.source);
       break;
     default:
       console.log('Error loading asset "' + asset.name + '". Unrecognized file extension "' + fileExtension + '"');
@@ -87,15 +89,31 @@ const loadAsset = (asset: Asset, assetsManager: BABYLON.AssetsManager, cube: Gam
   
 }
 
-const loadAssets = (cube: GameCube) => {
-  const { assets } = cube;
-  
-  if (isEmpty(assets)) {
+/**
+ * given a map name, use it as the asset root
+ * @param cube 
+ */
+export const fetchAssets = (cube: GameCube) => {
+  const { mapRoot } = cube;
+   
+  if (isEmpty(mapRoot)) {
     console.log('no assets to load!');
     return cube;
   }
+
+  const assets = [
+    {
+      name: 'heightmap',
+      source: `${rootAssetFolder}map/${mapRoot}/heightmap.png`
+    },
+    {
+      name: 'ground',
+      source: `${rootAssetFolder}map/${mapRoot}/ground.jpg`
+    }
+  ];
+
   const assetsManager = new BABYLON.AssetsManager(cube.scene as BABYLON.Scene);
-  assets?.forEach((asset) => loadAsset(asset, assetsManager, cube));
+  assets.forEach((asset) => loadAsset(asset, assetsManager, cube));
 
   assetsManager.onProgress = (remaining: Number, total: number, lastFinished: BABYLON.AbstractAssetTask) => {
     cube.logs = [];
@@ -103,8 +121,8 @@ const loadAssets = (cube: GameCube) => {
   }
 
   assetsManager.onFinish = () => { 
-    cube.ready = true;
     cube.console.push('All assets loaded.');
+    loadAssets(cube);
   }
   
   return cube;
