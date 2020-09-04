@@ -18,7 +18,7 @@ const createCanvas = (): GameCube => {
   const canvas = document.createElement('canvas') as HTMLCanvasElement;
   canvas.width = 1024;
   canvas.height = 768;
-  return { canvas, console: ['Canvas created'], loadedAssets: {}};
+  return { canvas, console: ['Canvas created'], loadedAssets: {}, characters: []};
 };
 
 const createText = (cube: GameCube): GameCube => {

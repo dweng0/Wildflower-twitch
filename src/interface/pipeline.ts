@@ -33,7 +33,7 @@ export interface Position {
 //todo extend this interface to include the character manifest
 export interface Character {
     id: string,
-    mesh: BABYLON.Mesh,
+    mesh?: BABYLON.Mesh,
     //todo add assets, for now, load as sphere
     assets: any,
     position:Position
@@ -72,7 +72,7 @@ export interface GameCube {
     console: Array<string>,
     mapRoot?: string
     loadedAssets?: any,
-    characters?: Array<Character>,
+    characters: Character[],
     materials?: {
         map: MapManifest
     }

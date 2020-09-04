@@ -1,7 +1,7 @@
 import { initializeDOM } from './generators/document';
 import { initializeScene } from './generators/scene';
 import { GameCube } from './interface/pipeline';
-import { loadCharacter } from './generators/character';
+import { loadCharacters } from './generators/character';
 import { loadMap } from './generators/maploader';
 import { loadAssets } from './generators/assetloader';
 import { initializeP2P } from './generators/connection';
@@ -34,7 +34,7 @@ const run = () => {
       cube = fetchAssets(cube);
       
       //load based on this
-      loadCharacter(cube);
+      loadCharacters(cube);
       
       //start the render loop
       const { engine, scene } = cube;

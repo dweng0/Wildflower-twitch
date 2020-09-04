@@ -1,7 +1,7 @@
 import Peer, { DataConnection } from 'peerjs';
 import { GameCube, Matchmaker, Character } from '../interface/pipeline';
 import { isNil, of, pipe, pick } from 'ramda';
-import { loadCharacter } from './character';
+import { loadCharacters } from './character';
 
 /**
  * Different data types we expect to send to our peers
@@ -68,8 +68,8 @@ const onConnection = (cube: GameCube) => {
   const connection = cube.connection as DataConnection;
 
   connection.on('open', () => {
-    connection.on('data', (data: PeerData) => { 
-        switch (data.event) {
+    connection.on('data', (stream: PeerData) => { 
+        switch (stream.event) {
           case DataEventType.handshake:
 
             //todo take this into a separate file when ready
@@ -78,6 +78,8 @@ const onConnection = (cube: GameCube) => {
               
               //got a character, check we dont aleady have it...
               let foundCharr = cube.characters?.filter((char) => { return char.id !== character.id });
+
+              //todo sanity check on the data provided (we only check for an ID, this could be dodgy!);
               if (isNil(foundCharr)) {
                 console.log(`Character not found adding ${character.id}`);
                 //at this point, there is no mesh. so load it here?
@@ -87,15 +89,20 @@ const onConnection = (cube: GameCube) => {
                 //because we didn't have this char, we should send a handshake back with our details.
 
                 //this assumes that our character is loaded, and that it always loads first.... assumptions are bad...
-                const thisCharacter: Character = cube.characters[0] as Character;
+                const myChar = cube.characters[0] as Character;
+                if(!isNil(myChar && myChar !== character)) {
 
+                }
                 const data: PeerData = {
                   event: DataEventType.handshake,
-                  data: pick(['id', 'assets', 'position'], cube.characters[0]);
+                  data: pick(['id', 'assets', 'position'], myChar)
                 }
-                cube.connection?.send()
+                cube.connection?.send(data);
+              } else {
+                  console.log('handshake ignored, character already loaded...');
               }
             }
+            handShake(cube, stream.data);
             break;
           case DataEventType.action:
             break;
