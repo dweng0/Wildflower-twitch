@@ -2,8 +2,6 @@ import { initializeDOM } from './generators/document';
 import { initializeScene } from './generators/scene';
 import { GameCube } from './interface/pipeline';
 import { loadCharacters } from './generators/character';
-import { loadMap } from './generators/maploader';
-import { loadAssets } from './generators/assetloader';
 import { initializeP2P } from './generators/connection';
 import { getManifests } from './generators/story';
 import { fetchAssets } from './generators/assetfetcher';

@@ -28,7 +28,7 @@ console.log('Loading characters');
 
   const buffer = 15;
   cube.characters = cube.characters.map<Character>((character: Character, index: number) => {
-    const newChar = createCharacterManifest({id: cube.peerId});
+    const newChar = character;
     //todo differentiate starting points between teams
     newChar.position = {x: (index * buffer), y: 1, z: 1}
     //todo look at assets to load stuff, for now load spheres
