@@ -1,7 +1,6 @@
 import Peer, { DataConnection } from 'peerjs';
 import { GameCube, Matchmaker, Character } from '../interface/pipeline';
-import { isNil, of, pipe, pick } from 'ramda';
-import { loadCharacters } from './character';
+import { isNil, pipe, pick } from 'ramda';
 
 /**
  * Different data types we expect to send to our peers
@@ -42,20 +41,6 @@ export const initialPeerConnection = (cube: GameCube) => {
     console.log('Connection made');
   })
   cube.peer = peer;
-  return cube;
-}
-
-/**
- * Hosts a p2p connection
- * @param cube 
- */
-export const recieveConnection = (cube: GameCube) => {
-  if (!isNil(cube.gameId)) {
-    cube.console.push(`Attempting to connect to ${cube.gameId}`);
-    cube.connection = getPeer(cube).connect(cube.gameId);
-  } else {
-    cube.console.push('No gameId provided');
-  }
   return cube;
 }
 
@@ -124,9 +109,27 @@ export const hostConnection = (cube: GameCube) => {
   getPeer(cube).on('connection', (connection) => {
     cube.console.push(`establishing connection with peer: ${connection.peer}`);
     cube.connection = connection;
+    onConnection(cube);
   });
   return cube;
 }
+
+
+/**
+ * Hosts a p2p connection
+ * @param cube 
+ */
+export const recieveConnection = (cube: GameCube) => {
+  if (!isNil(cube.gameId)) {
+    cube.console.push(`Attempting to connect to ${cube.gameId}`);
+    cube.connection = getPeer(cube).connect(cube.gameId);
+    onConnection(cube);
+  } else {
+    cube.console.push('No gameId provided');
+  }
+  return cube;
+}
+
 
 export const initializeP2P = pipe(
   initialPeerConnection,
