@@ -1,7 +1,7 @@
 import * as BABYLON from 'babylonjs';
 import { ArcRotateCamera, FollowCamera, FreeCamera} from 'babylonjs';
 import { MapManifest } from './manifest';
-import Peer from 'peerjs';
+import Peer, { DataConnection } from 'peerjs';
 /** Alias type for value that can be null */
 export type Nullable<T> = T | null;
 
@@ -24,9 +24,19 @@ export interface Log {
     message: string
 }
 
+export interface Position {
+    x: number,
+    y: number,
+    z: number
+}
+
 //todo extend this interface to include the character manifest
 export interface Character {
-    mesh: BABYLON.Mesh
+    id: string,
+    mesh: BABYLON.Mesh,
+    //todo add assets, for now, load as sphere
+    assets: any,
+    position:Position
 }
 
 export interface Asset { 
@@ -44,7 +54,7 @@ export interface GameCube {
     peers?: Array<string>
     peer?: Peer,
     peerId?: string,
-    connection?: any
+    connection?: DataConnection,
     connectionEvents?: {
         begin: () => void
         error?: (err: any) => void
