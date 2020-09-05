@@ -28,19 +28,18 @@ const getPeer = (cube: GameCube): Peer => {
   }
 }
 
+const handlePeerConnection = (peer: Peer, cube: GameCube) => {
+    peer.on('open', () => 
+        peer.on('connection', (connection) => 
+            onConnection(connection, cube)));
+}
+
 /**
  * Opens up a p2p connection
  * @param cube 
  */
 export const initialPeerConnection = (cube: GameCube) => {
-  const peer = new Peer(cube.peerId, { debug:3});
-  if (isNil(cube.peers)) {
-    cube.peers = [];
-  }
-  cube.peers.push(peer.id);
-  peer.on('open', () => {
-    console.log('Connection made');
-  })
+  const peer = new Peer(cube.peerId);
   cube.peer = peer;
   return cube;
 }
@@ -49,17 +48,13 @@ export const initialPeerConnection = (cube: GameCube) => {
  * Handle the data event, pass it on to the peer folder module
  * @param connection Peerjs DataConnection Object
  */
-const onConnection = (cube: GameCube) => {
-
-  const connection = cube.connection as DataConnection;
-
-  connection.on('open', () => {
-      console.log(`connection opened with ${cube.gameId}`);
-      //when a connection opens, we send a handshake
+const onConnection = (connection: DataConnection, cube: GameCube) => {
+       //when a connection opens, we send a handshake
     sendHandShake(connection, cube.characters[0]);
     //todo handle errors
     //otherwise listen to the data events
     connection.on('data', (stream: PeerData) => { 
+        console.log('data stream');
         switch (stream.event) {
           case DataEventType.handshake:
             receiveHandShake(cube, stream.data);
@@ -74,39 +69,19 @@ const onConnection = (cube: GameCube) => {
             break;
         }
     })
-  });
 }
 /**
- * Join a p2p connection
+ * Join p2p connection
  * @param cube 
  */
-export const hostConnection = (cube: GameCube) => { 
-  getPeer(cube).on('connection', (connection) => {
-    console.log(`establishing connection with peer: ${connection.peer}`);
-    cube.connection = connection;
-    onConnection(cube);
-  });
+export const joinPeerNetwork = (cube: GameCube) => {
+    const peer = getPeer(cube);
+    handlePeerConnection(peer, cube);
+    peer.connect(cube.gameId || 'peer id not set');
   return cube;
 }
-
-
-/**
- * Hosts a p2p connection
- * @param cube 
- */
-export const recieveConnection = (cube: GameCube) => {
-  if (!isNil(cube.gameId)) {
-    cube.console.push(`Attempting to connect to ${cube.gameId}`);
-    cube.connection = getPeer(cube).connect(cube.gameId);
-    onConnection(cube);
-  } else {
-    cube.console.push('No gameId provided');
-  }
-  return cube;
-}
-
 
 export const initializeP2P = pipe(
   initialPeerConnection,
-  (cube: GameCube) => (cube.matchmaking === Matchmaker.join) ? recieveConnection(cube) : hostConnection(cube)
+  joinPeerNetwork
 );

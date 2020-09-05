@@ -1,6 +1,7 @@
 import { pipe } from 'ramda';
 import { GameCube, Matchmaker } from '../interface/pipeline';
 import { Chance } from 'chance';
+import { initializeP2P } from './connection';
 
 
 /**
@@ -12,11 +13,12 @@ const chance = new Chance();
 let hostId = chance.guid();
 
 //apply regex
-const createCanvas = (): GameCube => {
+const createCanvas = (cube: GameCube): GameCube => {
   const canvas = document.createElement('canvas') as HTMLCanvasElement;
   canvas.width = 1024;
   canvas.height = 768;
-  return { canvas, console: ['Canvas created'], loadedAssets: {}, characters: []};
+    cube.canvas = canvas;
+    return cube;
 };
 
 const createText = (cube: GameCube): GameCube => {
@@ -36,6 +38,8 @@ const createHostButton = (cube: GameCube): GameCube => {
     cube.gameId = hostId;
     cube.matchmaking = Matchmaker.host;
     alert('You have opted to host, share the host id with your friends, so they can join you');
+    console.log('hosting a network');
+    initializeP2P(cube);
     cube.connectionEvents?.begin();
   })
   document.getElementsByTagName('body')[0].appendChild(btn);
@@ -57,8 +61,8 @@ const createJoinContent = (cube: GameCube): GameCube => {
   btn.addEventListener('click', () => {
     cube.gameId = input.value;
     cube.matchmaking = Matchmaker.join;
-    console.log('connecting to peer: ', cube.gameId);    
-    cube.peer?.connect(cube.gameId);
+    console.log('Joining peer ', cube.gameId);
+    initializeP2P(cube);
     cube.connectionEvents?.begin();
   });
 
