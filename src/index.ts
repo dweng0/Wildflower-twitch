@@ -1,7 +1,7 @@
 import { initializeDOM } from './generators/document';
 import { initializeScene } from './generators/scene';
 import { GameCube } from './interface/pipeline';
-import { loadCharacters } from './generators/character';
+import { loadCharacters, createCharacterManifest } from './generators/character';
 import { initializeP2P } from './generators/connection';
 import { getManifests } from './generators/story';
 import { fetchAssets } from './generators/assetfetcher';
@@ -9,7 +9,6 @@ import { fetchAssets } from './generators/assetfetcher';
 const run = () => {
   //create the canvas, and input box, inject it into document
   let cube: GameCube = initializeDOM();
-
   
   //create or host the P2P connection
   cube = initializeP2P(cube);
@@ -30,8 +29,11 @@ const run = () => {
 
       //load up assets
       cube = fetchAssets(cube);
+
+      //assume this user has chosen a character
+      cube.characters.push(createCharacterManifest({id:cube.peerId}));
       
-      //load based on this
+      //load other characters
       loadCharacters(cube);
       
       //start the render loop

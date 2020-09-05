@@ -1,6 +1,7 @@
 import Peer, { DataConnection } from 'peerjs';
 import { GameCube, Matchmaker, Character } from '../interface/pipeline';
 import { isNil, pipe, pick } from 'ramda';
+import { receiveHandShake, sendHandShake } from '../peer';
 
 /**
  * Different data types we expect to send to our peers
@@ -53,41 +54,15 @@ const onConnection = (cube: GameCube) => {
   const connection = cube.connection as DataConnection;
 
   connection.on('open', () => {
+      console.log(`connection opened with ${cube.gameId}`);
+      //when a connection opens, we send a handshake
+    sendHandShake(connection, cube.characters[0]);
+    //todo handle errors
+    //otherwise listen to the data events
     connection.on('data', (stream: PeerData) => { 
         switch (stream.event) {
           case DataEventType.handshake:
-
-            //todo take this into a separate file when ready
-            const handShake = (cube: GameCube, character: Character) => {
-              console.log('initialising handshake');
-              
-              //got a character, check we dont aleady have it...
-              let foundCharr = cube.characters?.filter((char) => { return char.id !== character.id });
-
-              //todo sanity check on the data provided (we only check for an ID, this could be dodgy!);
-              if (isNil(foundCharr)) {
-                console.log(`Character not found adding ${character.id}`);
-                //at this point, there is no mesh. so load it here?
-                //todo load character
-                cube.characters?.push(character);
-                
-                //because we didn't have this char, we should send a handshake back with our details.
-
-                //this assumes that our character is loaded, and that it always loads first.... assumptions are bad...
-                const myChar = cube.characters[0] as Character;
-                if(!isNil(myChar && myChar !== character)) {
-
-                }
-                const data: PeerData = {
-                  event: DataEventType.handshake,
-                  data: pick(['id', 'assets', 'position'], myChar)
-                }
-                cube.connection?.send(data);
-              } else {
-                  console.log('handshake ignored, character already loaded...');
-              }
-            }
-            handShake(cube, stream.data);
+            receiveHandShake(cube, stream.data);
             break;
           case DataEventType.action:
             break;
@@ -107,7 +82,7 @@ const onConnection = (cube: GameCube) => {
  */
 export const hostConnection = (cube: GameCube) => { 
   getPeer(cube).on('connection', (connection) => {
-    cube.console.push(`establishing connection with peer: ${connection.peer}`);
+    console.log(`establishing connection with peer: ${connection.peer}`);
     cube.connection = connection;
     onConnection(cube);
   });

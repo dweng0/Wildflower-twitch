@@ -9,11 +9,9 @@ import { Chance } from 'chance';
 
 const chance = new Chance();
 //the unique host id that will be used if the user decides to host
-//let hostId = `${chance.name().replace(' ', '_').replace('.', '_')}_the_inquisitive_${chance.animal().replace(' ', '_').replace('.', '_')}_works_at_${chance.company().replace(' ', '_').replace('.', '_')}_as_an_aspiring_${chance.profession({ rank: true }).replace(' ', '_').replace('.', '_')}`;
-let hostId = chance.name() + '_the_inquisitive_' + chance.animal() + 'works_at_' + chance.company() + '_as_an_aspiring_' + chance.profession();
-hostId = hostId.replace(' ', '_');
-hostId = hostId.replace('.', '');
+let hostId = chance.guid();
 
+//apply regex
 const createCanvas = (): GameCube => {
   const canvas = document.createElement('canvas') as HTMLCanvasElement;
   canvas.width = 1024;
