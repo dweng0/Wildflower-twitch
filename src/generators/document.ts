@@ -59,6 +59,10 @@ const createJoinContent = (cube: GameCube): GameCube => {
   btn.textContent = 'Join';
 
   btn.addEventListener('click', () => {
+    if(!input.value.trim()) {
+        alert('please enter a host id.');
+        return;
+    }
     cube.gameId = input.value;
     cube.matchmaking = Matchmaker.join;
     console.log('Joining peer ', cube.gameId);

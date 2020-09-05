@@ -29,9 +29,23 @@ const getPeer = (cube: GameCube): Peer => {
 }
 
 const handlePeerConnection = (peer: Peer, cube: GameCube) => {
-    peer.on('open', () => 
-        peer.on('connection', (connection) => 
-            onConnection(connection, cube)));
+    peer.on('open', () => {
+        console.log('peer opened');
+
+        if(cube.matchmaking === Matchmaker.join) {
+            //join
+            let connection = peer.connect(cube.gameId || '');
+            onConnection(connection, cube);
+        } else {
+            //host
+            peer.on('connection', (conn) => {
+                console.log('connection made')
+                onConnection(conn, cube)
+            });
+        }
+         
+    });
+       
 }
 
 /**
@@ -39,7 +53,7 @@ const handlePeerConnection = (peer: Peer, cube: GameCube) => {
  * @param cube 
  */
 export const initialPeerConnection = (cube: GameCube) => {
-  const peer = new Peer(cube.peerId);
+  const peer = new Peer(cube.peerId, {debug:3});
   cube.peer = peer;
   return cube;
 }
@@ -49,8 +63,11 @@ export const initialPeerConnection = (cube: GameCube) => {
  * @param connection Peerjs DataConnection Object
  */
 const onConnection = (connection: DataConnection, cube: GameCube) => {
-       //when a connection opens, we send a handshake
-    sendHandShake(connection, cube.characters[0]);
+    connection.on('open', function() {
+        
+    // Receive messages
+    console.log('connection stream opened...');
+
     //todo handle errors
     //otherwise listen to the data events
     connection.on('data', (stream: PeerData) => { 
@@ -68,7 +85,11 @@ const onConnection = (connection: DataConnection, cube: GameCube) => {
           default:
             break;
         }
-    })
+    });
+    connection.send('THIS IS A TEST');
+     //when a connection opens, we send a handshake
+    sendHandShake(connection, cube.characters[0]);
+    });
 }
 /**
  * Join p2p connection
