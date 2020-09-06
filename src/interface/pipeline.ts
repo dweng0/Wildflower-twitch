@@ -62,6 +62,8 @@ export interface GameCube {
         data?: (err: any) => void
         close?: (err: any) => void
     }
+    log: (msg: string) => void,
+    consoleOutput?: HTMLElement,
     matchmaking?: Matchmaker
     ready?: boolean,
     canvas?: HTMLCanvasElement | Nullable<HTMLCanvasElement> | Node

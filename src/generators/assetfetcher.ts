@@ -29,7 +29,7 @@ const onTaskSuccess = (task: any, cube: GameCube) => {
       cube.loadedAssets[task.name] = task.text;
       break;
     default:
-      console.log('Error loading asset "' + task.name + '". Unrecognized AssetManager task type.');
+      cube.log('Error loading asset "' + task.name + '". Unrecognized AssetManager task type.');
       break;
   }
 };
@@ -77,7 +77,7 @@ const loadAsset = (asset: Asset, assetsManager: BABYLON.AssetsManager, cube: Gam
       assetTask = assetsManager.addTextFileTask(asset.name, asset.source);
       break;
     default:
-      console.log('Error loading asset "' + asset.name + '". Unrecognized file extension "' + fileExtension + '"');
+      cube.log('Error loading asset "' + asset.name + '". Unrecognized file extension "' + fileExtension + '"');
       break;
   }
   if (!isNil(assetTask)) {
@@ -97,7 +97,7 @@ export const fetchAssets = (cube: GameCube) => {
   const { mapRoot } = cube;
    
   if (isEmpty(mapRoot)) {
-    console.log('no assets to load!');
+    cube.log('no assets to load!');
     return cube;
   }
 

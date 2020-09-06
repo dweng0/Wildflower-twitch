@@ -1,4 +1,4 @@
-import { pipe } from 'ramda';
+import { pipe, isEmpty } from 'ramda';
 import { GameCube, Matchmaker } from '../interface/pipeline';
 import { Chance } from 'chance';
 import { initializeP2P } from './connection';
@@ -24,7 +24,7 @@ const createCanvas = (cube: GameCube): GameCube => {
 const createText = (cube: GameCube): GameCube => {
   const text = document.createElement('p') as HTMLParagraphElement;
   text.innerText = hostId;
-  console.log(`id is: ${hostId}`);
+  cube.log(`peer id is: ${hostId}`);
   document.getElementsByTagName('body')[0].appendChild(text);
   cube.gameId = hostId;
   cube.peerId = hostId;
@@ -38,7 +38,7 @@ const createHostButton = (cube: GameCube): GameCube => {
     cube.gameId = hostId;
     cube.matchmaking = Matchmaker.host;
     alert('You have opted to host, share the host id with your friends, so they can join you');
-    console.log('hosting a network');
+    cube.log('hosting a network');
     initializeP2P(cube);
     cube.connectionEvents?.begin();
   })
@@ -65,7 +65,7 @@ const createJoinContent = (cube: GameCube): GameCube => {
     }
     cube.gameId = input.value;
     cube.matchmaking = Matchmaker.join;
-    console.log('Joining peer ', cube.gameId);
+    cube.log(`Joining peer ${cube.gameId}`);
     initializeP2P(cube);
     cube.connectionEvents?.begin();
   });
@@ -80,14 +80,39 @@ const createJoinContent = (cube: GameCube): GameCube => {
 */
 const injectCanvas = (cube: GameCube):GameCube => {
   document.getElementsByTagName('body')[0].appendChild(cube.canvas as HTMLCanvasElement);
-  console.log('created canvas, injected into document');
+  cube.console.push('created canvas, injected into document');
   return cube;
 }
 
-export const initializeDOM = pipe(  
+/**
+ * Setup element to inject console logs into
+ */
+const injectLogging = (cube: GameCube): GameCube => {
+
+  //create a text area
+  const pre = document.createElement("TEXTAREA") as HTMLTextAreaElement;
+  pre.setAttribute('disabled', 'true');
+  pre.value = '';
+  pre.rows = 6;
+  pre.style.width = '100%';
+
+  //set up the log fn and make sure any pre existing logs are added to the element.
+  cube.console.forEach((msg) => { pre.value = `${pre.value} \n ${msg}` } )
+
+  cube.log = (msg: string) => {
+    cube.console.push(msg);
+    pre.value = `${msg} \n ${pre.value}`;
+  }
+
+  document.getElementsByTagName('body')[0].appendChild(pre);
+  return cube;
+}
+
+export const initializeDOM = pipe(
   createCanvas,
   injectCanvas,
   createText,
   createHostButton,
   createJoinContent,
+  injectLogging,
 );

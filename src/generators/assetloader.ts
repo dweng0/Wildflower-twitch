@@ -11,7 +11,7 @@ const rootAssetFolder = './assets/';
  * @param cube 
  */
 export const assetLoaderInit = (cube: GameCube) => {
-  console.log('Begin asset Loading pipeline');
+  cube.log('Begin asset Loading pipeline');
   return cube;
 }
 

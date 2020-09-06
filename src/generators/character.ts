@@ -16,7 +16,7 @@ export const createCharacterManifest = (characterData: any):Character => {
  */
 export const loadCharacters = (cube: GameCube) => {
 
-console.log('Loading characters');
+cube.log('Loading characters');
     
   if (isNil(cube.scene)) {
     throw new Error('Unable to create character, scene missing!');

@@ -30,7 +30,7 @@ const getPeer = (cube: GameCube): Peer => {
 
 const handlePeerConnection = (peer: Peer, cube: GameCube) => {
     peer.on('open', () => {
-        console.log('peer opened');
+        cube.log('peer opened');
 
         if(cube.matchmaking === Matchmaker.join) {
             //join
@@ -39,7 +39,7 @@ const handlePeerConnection = (peer: Peer, cube: GameCube) => {
         } else {
             //host
             peer.on('connection', (conn) => {
-                console.log('connection made')
+                cube.log('connection made')
                 onConnection(conn, cube)
             });
         }
@@ -66,12 +66,12 @@ const onConnection = (connection: DataConnection, cube: GameCube) => {
     connection.on('open', function() {
         
     // Receive messages
-    console.log('connection stream opened...');
+    cube.log('connection stream opened...');
 
     //todo handle errors
     //otherwise listen to the data events
     connection.on('data', (stream: PeerData) => { 
-        console.log('data stream');
+        cube.log('data stream');
         switch (stream.event) {
           case DataEventType.handshake:
             receiveHandShake(cube, stream.data);
@@ -86,7 +86,7 @@ const onConnection = (connection: DataConnection, cube: GameCube) => {
             break;
         }
     });
-    connection.send('THIS IS A TEST');
+    cube.log('Sending a handshake')
      //when a connection opens, we send a handshake
     sendHandShake(connection, cube.characters[0]);
     });
