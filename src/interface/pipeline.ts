@@ -63,6 +63,8 @@ export interface GameCube {
         close?: (err: any) => void
     }
     log: (msg: string) => void,
+    blockChain: any[],
+    secret: string,
     consoleOutput?: HTMLElement,
     matchmaking?: Matchmaker
     ready?: boolean,

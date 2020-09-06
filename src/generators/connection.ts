@@ -67,7 +67,7 @@ const onConnection = (connection: DataConnection, cube: GameCube) => {
         
     // Receive messages
     cube.log('connection stream opened...');
-
+      
     //todo handle errors
     //otherwise listen to the data events
     connection.on('data', (stream: PeerData) => { 

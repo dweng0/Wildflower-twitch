@@ -9,11 +9,10 @@ import { fetchAssets } from './generators/assetfetcher';
 const run = () => {
 
   const log = ['Starting cube...'];
-  let cube: GameCube = { console: log, loadedAssets: {}, characters: [],  log: (msg) => log.push(msg)};
+  let cube: GameCube = { console: log, loadedAssets: {}, characters: [],  log: (msg) => log.push(msg), secret:crypto.getRandomValues(new Uint32Array(1))[0].toString(), blockChain:[]};
 
   //create the canvas, and input box, inject it into document
   cube = initializeDOM(cube);
-
 
   //load game manifest
   cube = getManifests(cube);
