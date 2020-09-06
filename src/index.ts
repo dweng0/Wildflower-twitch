@@ -1,42 +1,50 @@
 import { initializeDOM } from './generators/document';
 import { initializeScene } from './generators/scene';
 import { GameCube } from './interface/pipeline';
-import { loadCharacters } from './generators/character';
-import { initializeP2P } from './generators/connection';
+import { loadCharacters, createCharacterManifest } from './generators/character';
+import { initializeP2P, initialPeerConnection } from './generators/connection';
 import { getManifests } from './generators/story';
 import { fetchAssets } from './generators/assetfetcher';
 
 const run = () => {
-  //create the canvas, and input box, inject it into document
-  let cube: GameCube = initializeDOM();
 
-  
-  //create or host the P2P connection
-  cube = initializeP2P(cube);
+  const log = ['Starting cube...'];
+  let cube: GameCube = { console: log, loadedAssets: {}, characters: [],  log: (msg) => log.push(msg)};
+
+  //create the canvas, and input box, inject it into document
+  cube = initializeDOM(cube);
+
 
   //load game manifest
   cube = getManifests(cube);
-  console.log('here');
-  
+  cube.log('Awaiting connection event...');
+
   //await successful connection
   cube.connectionEvents = {
     begin: () => {
-
+      cube.log('connection event started');
       //pretend the user has picked a map and its been provided here via some form of input...
       cube.mapRoot = 'stargazer';
 
+      cube.log('loading scene')
       //create scene
       cube = initializeScene(cube);
 
+      cube.log('fetching assets');
       //load up assets
       cube = fetchAssets(cube);
-      
-      //load based on this
+
+      cube.log('Loading chosen character assets');
+      //assume this user has chosen a character
+      cube.characters.push(createCharacterManifest({ id: cube.peerId }));
+
+      //load other characters
       loadCharacters(cube);
-      
+
       //start the render loop
       const { engine, scene } = cube;
-      
+
+      cube.log('Rendering');
       engine?.runRenderLoop(() => scene?.render());
 
       //hook up window listeners
