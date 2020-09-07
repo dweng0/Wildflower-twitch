@@ -2,6 +2,7 @@ import Peer, { DataConnection } from 'peerjs';
 import { GameCube, Matchmaker, Character } from '../interface/pipeline';
 import { isNil, pipe, pick } from 'ramda';
 import { receiveHandShake, sendHandShake } from '../peer';
+import { setupPeerMethods } from '../peer/index';
 
 /**
  * Different data types we expect to send to our peers
@@ -39,7 +40,7 @@ const handlePeerConnection = (peer: Peer, cube: GameCube) => {
         } else {
             //host
             peer.on('connection', (conn) => {
-                cube.log('connection made')
+                cube.log('A peer has connected.')
                 onConnection(conn, cube)
             });
         }
@@ -88,7 +89,10 @@ const onConnection = (connection: DataConnection, cube: GameCube) => {
     });
     cube.log('Sending a handshake')
      //when a connection opens, we send a handshake
-    sendHandShake(connection, cube.characters[0]);
+      sendHandShake(connection, cube.characters[0]);
+      
+      //setup peer communications
+      setupPeerMethods(connection, cube);
     });
 }
 /**

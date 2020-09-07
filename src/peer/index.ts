@@ -1,5 +1,5 @@
 import { GameCube, Character } from "../interface/pipeline";
-import { PeerData, DataEventType } from "../generators/connection";
+import { PeerData, DataEventType } from '../generators/connection';
 import { pick, isNil } from "ramda";
 import { DataConnection } from "peerjs";
 
@@ -12,6 +12,19 @@ export const sendHandShake = (connection: DataConnection, data: any) => {
     data: pick(['id', 'assets', 'position'], data)
   }
   connection.send(dataStream);
+};
+
+/**
+ * 
+ * @param connection setup the communication methods to be used by the game
+ * @param cube 
+ */
+export const setupPeerMethods = (connection: DataConnection, cube: GameCube): void => {
+  cube.log('Setting up actions...');
+  cube.actions = {
+    movement: (position: any) => connection.send({ event: DataEventType.move, data: position }),
+    clickEvent: (position: any, action: any) => connection.send({ event: DataEventType.action, data: { ...position, ...action } })
+  }
 };
 
 /**

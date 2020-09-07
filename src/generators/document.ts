@@ -93,7 +93,7 @@ const injectLogging = (cube: GameCube): GameCube => {
   const pre = document.createElement("TEXTAREA") as HTMLTextAreaElement;
   pre.setAttribute('disabled', 'true');
   pre.value = '';
-  pre.rows = 6;
+  pre.rows = 12;
   pre.style.width = '100%';
 
   //set up the log fn and make sure any pre existing logs are added to the element.

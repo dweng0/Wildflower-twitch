@@ -57,11 +57,11 @@ export interface GameCube {
     connection?: DataConnection,
     connectionEvents?: {
         begin: () => void
-        error?: (err: any) => void
-        /** all data will pass through this */
-        data?: (err: any) => void
-        close?: (err: any) => void
-    }
+    },
+    actions?:{
+        movement: (position: any) => void,
+        clickEvent:  (position: any, action: any) => void
+    },
     log: (msg: string) => void,
     consoleOutput?: HTMLElement,
     matchmaking?: Matchmaker
