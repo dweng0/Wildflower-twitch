@@ -1,5 +1,5 @@
 import * as BABYLON from 'babylonjs';
-import { ArcRotateCamera, FollowCamera, FreeCamera} from 'babylonjs';
+import { ArcRotateCamera, FollowCamera, FreeCamera } from 'babylonjs';
 import { MapManifest } from './manifest';
 import Peer, { DataConnection } from 'peerjs';
 /** Alias type for value that can be null */
@@ -36,10 +36,11 @@ export interface Character {
     mesh?: BABYLON.Mesh,
     //todo add assets, for now, load as sphere
     assets: any,
-    position:Position
+    position: Position,
+    inputMap?: any
 }
 
-export interface Asset { 
+export interface Asset {
     name: string,
     source: string
 };
@@ -58,9 +59,9 @@ export interface GameCube {
     connectionEvents?: {
         begin: () => void
     },
-    actions?:{
+    actions?: {
         movement: (position: any) => void,
-        clickEvent:  (position: any, action: any) => void
+        clickEvent: (position: any, action: any) => void
     },
     log: (msg: string) => void,
     consoleOutput?: HTMLElement,

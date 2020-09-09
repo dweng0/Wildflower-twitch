@@ -1,14 +1,15 @@
-import { GameCube, Character } from '../interface/pipeline';
+import { GameCube, Character, Position } from '../interface/pipeline';
 import { isNil } from 'ramda';
 import * as BABYLON from 'babylonjs';
 
 
-export const createCharacterManifest = (characterData: any):Character => {
-    return {
-        id: characterData.id,
-        position: {x: 0, y:0, z:0},
-        assets:{}
-    };
+export const createCharacterManifest = (characterData: any): Character => {
+  return {
+    id: characterData.id,
+    position: { x:0, y:0, z:0},
+    assets: {},
+    inputMap: {}
+  };
 }
 
 /**
@@ -16,23 +17,23 @@ export const createCharacterManifest = (characterData: any):Character => {
  */
 export const loadCharacters = (cube: GameCube) => {
 
-cube.log('Loading characters');
-    
+  cube.log('Loading characters');
+
   if (isNil(cube.scene)) {
     throw new Error('Unable to create character, scene missing!');
   }
 
-  if(isNil(cube.characters)) {
-      throw new Error('No characters found to load...');
+  if (isNil(cube.characters)) {
+    throw new Error('No characters found to load...');
   }
-
   const buffer = 15;
   cube.characters = cube.characters.map<Character>((character: Character, index: number) => {
     const newChar = character;
-    //todo differentiate starting points between teams
-    newChar.position = {x: (index * buffer), y: 1, z: 1}
+    const { x, y, z } = character.position;
+    const position = new BABYLON.Vector3(x + buffer, y, z);
     //todo look at assets to load stuff, for now load spheres
-    newChar.mesh = BABYLON.MeshBuilder.CreateSphere('sphere', { diameter: 2 }, cube.scene);
+    newChar.mesh = BABYLON.MeshBuilder.CreateSphere(character.id, { diameter: 2 }, cube.scene);
+    newChar.mesh.position = position;
     return newChar;
   });
 }

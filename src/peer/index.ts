@@ -32,7 +32,7 @@ export const setupPeerMethods = (connection: DataConnection, cube: GameCube): vo
  */
 export const receiveHandShake = (cube: GameCube, character: Character) => {
   cube.log(`received a handshake from ${character.id}`);
-
+  debugger; 
   //got a character, check we dont aleady have it...
   let foundCharr = cube.characters?.filter((char) => { return char.id !== character.id });
 
