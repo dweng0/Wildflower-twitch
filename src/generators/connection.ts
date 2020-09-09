@@ -72,9 +72,10 @@ const onConnection = (connection: DataConnection, cube: GameCube) => {
     //todo handle errors
     //otherwise listen to the data events
     connection.on('data', (stream: PeerData) => { 
-        cube.log('data stream');
+        
         switch (stream.event) {
           case DataEventType.handshake:
+            cube.log('handshake');
             receiveHandShake(cube, stream.data);
             break;
           case DataEventType.action:

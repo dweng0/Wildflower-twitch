@@ -2,6 +2,7 @@ import { GameCube, Character } from "../interface/pipeline";
 import { PeerData, DataEventType } from '../generators/connection';
 import { pick, isNil } from "ramda";
 import { DataConnection } from "peerjs";
+import { createCharacter } from '../generators/character';
 
 /**
  * Handles sending the handshake request
@@ -32,28 +33,28 @@ export const setupPeerMethods = (connection: DataConnection, cube: GameCube): vo
  */
 export const receiveHandShake = (cube: GameCube, character: Character) => {
   cube.log(`received a handshake from ${character.id}`);
+  const { scene } = cube;
+
+  if (!scene) {
+    throw new Error('Scene missing');
+  }
   debugger; 
   //got a character, check we dont aleady have it...
-  let foundCharr = cube.characters?.filter((char) => { return char.id !== character.id });
+  let foundCharr = cube.characters?.filter((char) => (char.id === character.id));
 
   //todo sanity check on the data provided (we only check for an ID, this could be dodgy!);
   if (isNil(foundCharr)) {
     cube.log(`Character not found adding ${character.id}`);
-    //at this point, there is no mesh. so load it here?
-    //todo load character
-    cube.characters?.push(character);
-
+    cube.characters?.push(createCharacter(character, scene));
     //because we didn't have this char, we should send a handshake back with our details.
 
     //this assumes that our character is loaded, and that it always loads first.... assumptions are bad...
     const myChar = cube.characters[0] as Character;
-    if (!isNil(myChar && myChar !== character)) {
-
-    }
     const data: PeerData = {
       event: DataEventType.handshake,
       data: pick(['id', 'assets', 'position'], myChar)
     }
+    cube.log('Sending back a handshake');
     cube.connection?.send(data);
   } else {
     cube.log('handshake ignored, character already loaded...');

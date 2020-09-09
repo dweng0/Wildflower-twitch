@@ -118,7 +118,7 @@ const run = () => {
       cube.log('Loading chosen character assets');
       //assume this user has chosen a character
       cube.characters.push(createCharacterManifest({ id: cube.peerId }));
-
+      debugger;
       //load other characters
       loadCharacters(cube);
 
