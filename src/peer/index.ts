@@ -41,7 +41,8 @@ export const receiveHandShake = (cube: GameCube, character: Character) => {
   debugger; 
   //got a character, check we dont aleady have it...
   let foundCharr = cube.characters?.filter((char) => (char.id === character.id));
-
+  console.log(`checking if char ${character.id} exists in our list of characters`, cube.characters);
+  
   //todo sanity check on the data provided (we only check for an ID, this could be dodgy!);
   if (isNil(foundCharr)) {
     cube.log(`Character not found adding ${character.id}`);
